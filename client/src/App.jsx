@@ -1,12 +1,12 @@
 // App.jsx — the router config.
 // ────────────────────────────────────────────────────────────
-// TASK 2: three routes below are meant to be private, but right now they
-// render for ANYONE. Wrap each protected element in <PrivateRoute> once you
-// have built it, e.g.:
-//     <Route path="/dashboard" element={
-//       <PrivateRoute><DashboardPage /></PrivateRoute>
-//     } />
-// Leave "/", "/login" and "/threads" public.
+// TASK 2 (done): the three private routes are each wrapped in <PrivateRoute>.
+// "/" , "/login" and "/threads" stay public — gating the login page would make
+// it unreachable for exactly the people who need it.
+//
+// Wrapper-per-element rather than one guarded parent route with an <Outlet />:
+// this way each protected route is visibly guarded at its own definition, which
+// is the easiest thing to audit.
 // ────────────────────────────────────────────────────────────
 import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar.jsx";
@@ -29,10 +29,31 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/threads" element={<ThreadsPage />} />
 
-        {/* TODO (task 2): protect these three with <PrivateRoute> */}
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/threads/new" element={<NewThreadPage />} />
+        {/* protected — each element wrapped in the gate */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <DashboardPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/threads/new"
+          element={
+            <PrivateRoute>
+              <NewThreadPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
   );
